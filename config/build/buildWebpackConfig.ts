@@ -5,12 +5,15 @@ import {buildResolvers} from "./buildResolvers";
 import {buildLoaders} from "./buildLoaders";
 import {buildDevServer} from "./buildDevServer";
 export function buildWebpackConfig(options: BuildOptions): webpack.Configuration {
+
+  const {isDev, mode, paths} = options
+
  return {
-     mode: options.mode,
-     entry: options.paths.entry,
+     mode: mode,
+     entry: paths.entry,
      output: {
          filename: '[name].[contenthash].js',
-         path: options.paths.build,
+         path: paths.build,
          clean: true,
      },
      module: {
@@ -18,7 +21,7 @@ export function buildWebpackConfig(options: BuildOptions): webpack.Configuration
      },
      resolve: buildResolvers(),
      plugins: buildPlugins(options),
-     devServer: buildDevServer(options),
-     devtool: 'inline-source-map'
+     devServer: isDev ? buildDevServer(options) : undefined,
+     devtool: isDev ? 'inline-source-map' : undefined
  }
 }
